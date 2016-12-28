@@ -2,6 +2,7 @@ body {
     color: dimgray;
     font: 500 20px/26px 'Helvetica Neue', Helvetica, Arial, Sans-serif;
     -webkit-font-smoothing: antialiased;
+    overflow: hidden;
 }
 
 #sidebar {
@@ -22,6 +23,7 @@ body {
     right: 0px; 
     width: 75%; 
     height: 100%;
+    overflow: hidden; 
 }
 
 
