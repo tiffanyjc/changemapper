@@ -1,0 +1,21 @@
+body {
+    color: dimgray;
+    font: 500 20px/26px 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+#sidebar {
+    position: absolute; 
+    top: 0px; 
+    left: 0; 
+    width: 25%; 
+    height: 100%; 
+}
+
+#map {
+    position: absolute; 
+    top: 0px; 
+    right: 0px; 
+    width: 75%; 
+    height: 100%;
+}
