@@ -21,6 +21,16 @@
     
     <div id='map'></div>
     <script>
+        // This will let you use the .remove() function later on
+        if (!('remove' in Element.prototype)) {
+            Element.prototype.remove = function() {
+                if (this.parentNode) {
+                    this.parentNode.removeChild(this);
+                }
+            };
+        }
+        
+        
         mapboxgl.accessToken = 'pk.eyJ1IjoidGlmZmFueWMiLCJhIjoiY2l4MXkzbWN6MDBtYzJ0b3dlbzZqYXB0ZCJ9.UNXg3aYLewWGSR-tvLKQfg';
         
         var map = new mapboxgl.Map({
@@ -293,6 +303,7 @@
             }); 
         }); 
         
+        // FUNCTIONS HERE 
         
         function buildLocationList(data) {
             // Iterate through the list of stores
@@ -315,6 +326,22 @@
                 link.className = 'title';
                 link.dataPosition = i;
                 link.innerHTML = prop.address;
+                
+                // Add an event listener for the links in the sidebar listing
+                link.addEventListener('click', function(e) {
+                    // Update the currentFeature to the store associated with the clicked link
+                    var clickedListing = data.features[this.dataPosition];
+                    // 1. Fly to the point associated with the clicked link
+                    flyToMarker(clickedListing);
+                    // 2. Close all other popups and display popup for clicked store
+                    createPopUp(clickedListing);
+                    // 3. Highlight listing in sidebar (and remove highlight for all other listings)
+                    var activeItem = document.getElementsByClassName('active');
+                    if (activeItem[0]) {
+                        activeItem[0].classList.remove('active');
+                    }
+                    this.parentNode.classList.add('active');
+                });
 
                 // Create a new div with the class 'details' for each store
                 // and fill it with the city and phone number
@@ -324,6 +351,25 @@
                     details.innerHTML += ' &middot; ' + prop.phoneFormatted;
                 }
             }
+        }
+        
+        function flyToMarker(currentFeature) {
+            map.flyTo({
+                center: currentFeature.geometry.coordinates,
+                zoom: 13
+            });
+        }
+
+        function createPopUp(currentFeature) {
+            var popUps = document.getElementsByClassName('mapboxgl-popup');
+            // Check if there is already a popup on the map and if so, remove it
+            if (popUps[0]) popUps[0].remove();
+
+            var popup = new mapboxgl.Popup({ closeOnClick: false })
+            .setLngLat(currentFeature.geometry.coordinates)
+            .setHTML('<h3>Here is a location</h3>' +
+                     '<h4>' + currentFeature.properties.address + '</h4>')
+            .addTo(map);
         }
         
         buildLocationList(stores); 
